@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { BACKEND_URL } from "../../config";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const Signup = () => {
@@ -24,12 +24,15 @@ export const Signup = () => {
             alert("Signup Successful");
             navigate("/signin");
 
-        } catch (err: any) {
+        } catch (err) {
+            const error = err as AxiosError<{ message: string }>;
+
             const message =
-                err?.response?.data?.message || "Something went wrong";
+                error.response?.data?.message || "Something went wrong";
 
             alert(message);
         }
+
     }
 
     return (

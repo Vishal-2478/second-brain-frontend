@@ -4,6 +4,7 @@ import { Signup } from "./components/pages/Signup"
 import { Signin } from "./components/pages/Signin"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { SharedBrain } from "./components/pages/SharedBrain"
+import { ProtectedRoute } from "./components/ProtectedRoute"
 
 function App() {
   return (
@@ -12,7 +13,15 @@ function App() {
         <Route path="/" element={<Signup />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
-        <Route path="/dashboard" element={<DashBoard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashBoard />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/share/:hash" element={<SharedBrain />} />
         <Route path="*" element={<h2>404 Page not found</h2>} />
       </Routes>
