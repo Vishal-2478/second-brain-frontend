@@ -6,6 +6,7 @@ import { SidebarItem } from "./SidebarItem";
 
 export const SideBar = () => {
     const navigate = useNavigate();
+    const token = localStorage.getItem("token");
 
     function handleLogout() {
         localStorage.removeItem("token");
@@ -30,14 +31,16 @@ export const SideBar = () => {
             </div>
 
             {/* LOGOUT BUTTON */}
-            <div className="p-3">
-                <button
-                    onClick={handleLogout}
-                    className="w-full py-2 rounded-lg text-white bg-gradient-to-l from-red-400 to-red-600 hover:opacity-90 transition-all"
-                >
-                    Logout
-                </button>
-            </div>
+            {token && (
+                <div className="p-3">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full py-2 rounded-lg text-white bg-gradient-to-l from-red-400 to-red-600 hover:opacity-90 transition-all"
+                    >
+                        Logout
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
