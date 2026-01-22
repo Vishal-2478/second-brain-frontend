@@ -1,10 +1,10 @@
 import { useRef } from "react";
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 import { BACKEND_URL } from "../../config";
-
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 export const Signup = () => {
 
     const usernameRef = useRef<HTMLInputElement | null>(null);
@@ -15,14 +15,23 @@ export const Signup = () => {
         const username = usernameRef.current?.value;
         const password = passwordRef.current?.value;
 
-        await axios.post(`${BACKEND_URL}/api/v1/signup`, {
-            username,
-            password
-        })
-        navigate("/signin");
-        alert("Signup Successful");
+        try {
+            await axios.post(`${BACKEND_URL}/api/v1/signup`, {
+                username,
+                password
+            });
 
+            alert("Signup Successful");
+            navigate("/signin");
+
+        } catch (err: any) {
+            const message =
+                err?.response?.data?.message || "Something went wrong";
+
+            alert(message);
+        }
     }
+
     return (
         <div className="w-screen h-screen fixed top-0 left-0 bg-gradient-to-l from-violet-200 to-orange-200 flex justify-center items-center">
             <div className="bg-white rounded-xl border p-6">
@@ -33,5 +42,5 @@ export const Signup = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
