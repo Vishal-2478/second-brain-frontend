@@ -18,18 +18,35 @@ export const DashBoard = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const { contents } = useContent();
 
-    async function shareContent() {
-        const response = await axios.post(`${BACKEND_URL}/api/v1/brain/share`, {
-            status: true
-        }, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
+    async function toggleShare(status: boolean) {
+        try {
+            const response = await axios.post(
+                `${BACKEND_URL}/api/v1/brain/share`,
+                { status },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }
+            );
+
+            if (status) {
+                const shareUrl = `${window.location.origin}/share/${response.data.hash}`;
+                navigator.clipboard.writeText(shareUrl);
+                alert("Sharing enabled. Link copied to clipboard.");
+            } else {
+                alert("Sharing disabled. Public access blocked.");
             }
-        });
-        const shareUrl = `${window.location.origin}share/${response.data.hash}`;
-        navigator.clipboard.writeText(shareUrl);
-        alert("Share link is copied to clipboard");
+
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                alert(err.response?.data?.message || "Sharing failed");
+            } else {
+                alert("Unexpected error occurred");
+            }
+        }
     }
+
 
     return (
         <div>
@@ -40,8 +57,28 @@ export const DashBoard = () => {
                 }} />
 
                 <div className='flex justify-end gap-4'>
-                    <Button onClick={shareContent} variant="secondary" size="md" text="Share Brain" startIcon={ShareIcon} />
-                    <Button onClick={() => setModalOpen(true)} variant="primary" size="md" text="Add Content" startIcon={PlusIcon} />
+                    <Button
+                        onClick={() => toggleShare(true)}
+                        variant="secondary"
+                        size="md"
+                        text="Enable Sharing"
+                        startIcon={ShareIcon}
+                    />
+
+                    <Button
+                        onClick={() => toggleShare(false)}
+                        variant="secondary"
+                        size="md"
+                        text="Disable Sharing"
+                    />
+
+                    <Button
+                        onClick={() => setModalOpen(true)}
+                        variant="primary"
+                        size="md"
+                        text="Add Content"
+                        startIcon={PlusIcon}
+                    />
                 </div>
                 <div className='grid grid-cols-3 gap-6 mt-6'>
                     {contents.map((cont, index) => (
