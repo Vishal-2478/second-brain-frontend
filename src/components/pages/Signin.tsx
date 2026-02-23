@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../config";
 import { Button } from "../ui/Button"
 import { Input } from "../ui/Input"
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRef } from "react";
 
 export const Signin = () => {
@@ -14,14 +14,23 @@ export const Signin = () => {
     async function SignIn() {
         const username = usernameRef.current?.value;
         const password = passwordRef.current?.value;
+        try {
+            const response = await axios.post(`${BACKEND_URL}/api/v1/signin`, {
+                username,
+                password
+            })
+            const jwt = response.data.token;
+            localStorage.setItem("token", jwt);
+            navigate("/dashboard");
+        }
+        catch (err) {
+            const error = err as AxiosError<{ message: string }>;
 
-        const response = await axios.post(`${BACKEND_URL}/api/v1/signin`, {
-            username,
-            password
-        })
-        const jwt = response.data.token;
-        localStorage.setItem("token", jwt);
-        navigate("/dashboard");
+            const message =
+                error.response?.data?.message || "Something went wrong";
+
+            alert(message);
+        }
     }
 
     return (
