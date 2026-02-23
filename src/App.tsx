@@ -5,12 +5,13 @@ import { Signin } from "./components/pages/Signin"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { SharedBrain } from "./components/pages/SharedBrain"
 import { ProtectedRoute } from "./components/ProtectedRoute"
+import LandingPage from "./components/pages/LandingPage"
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Signup />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route
